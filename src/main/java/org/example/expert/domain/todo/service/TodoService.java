@@ -47,10 +47,20 @@ public class TodoService {
         );
     }
 
-    public Page<TodoResponse> getTodos(int page, int size) {
+    /**
+     * - 할 일 검색 시 `weather` 조건으로도 검색할 수 있어야해요.
+     * - `weather` 조건은 있을 수도 있고, 없을 수도 있어요!
+     * - 할 일 검색 시 수정일 기준으로 기간 검색이 가능해야해요.
+     * - 기간의 시작과 끝 조건은 있을 수도 있고, 없을 수도 있어요!
+     * - JPQL을 사용하고, 쿼리 메소드명은 자유롭게 지정하되 너무 길지 않게 해주세요.
+     * <p>
+     * 💡 필요할 시, 서비스 단에서 if문을 사용해 여러 개의 쿼리(JPQL)를 사용하셔도 좋습니다.
+     */
+    // 일정 조회
+    public Page<TodoResponse> getTodos(int page, int size,String weather) {
         Pageable pageable = PageRequest.of(page - 1, size);
 
-        Page<Todo> todos = todoRepository.findAllByOrderByModifiedAtDesc(pageable);
+        Page<Todo> todos = todoRepository.findTodos(weather,pageable);
 
         return todos.map(todo -> new TodoResponse(
                 todo.getId(),

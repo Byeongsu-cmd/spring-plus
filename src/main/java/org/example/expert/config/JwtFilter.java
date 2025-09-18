@@ -32,7 +32,7 @@ public class JwtFilter implements Filter {
 
         String url = httpRequest.getRequestURI();
 
-        if (url.startsWith("/auth")) {
+        if (url.startsWith("/auth")) { // "/auth" 말고는 토큰키 필수 -> whitelist 현경님과 진희님의 도움으로 해결 너무너무 감사합니다!
             chain.doFilter(request, response);
             return;
         }
