@@ -17,6 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -57,10 +59,10 @@ public class TodoService {
      * 💡 필요할 시, 서비스 단에서 if문을 사용해 여러 개의 쿼리(JPQL)를 사용하셔도 좋습니다.
      */
     // 일정 조회
-    public Page<TodoResponse> getTodos(int page, int size,String weather) {
+    public Page<TodoResponse> getTodos(int page, int size, String weather, LocalDateTime startAt, LocalDateTime endAt) {
         Pageable pageable = PageRequest.of(page - 1, size);
 
-        Page<Todo> todos = todoRepository.findTodos(weather,pageable);
+        Page<Todo> todos = todoRepository.findTodos(weather, startAt, endAt, pageable);
 
         return todos.map(todo -> new TodoResponse(
                 todo.getId(),
