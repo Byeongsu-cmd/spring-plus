@@ -19,7 +19,7 @@ public class AdminAccessLoggingAspect {
     private final HttpServletRequest request;
 
     /**
-     * Debug로 실행 후 체크하는 법
+     * Debug로 실행 후 체크하는 법 (입력되는 파라마터)
      * 브레이크 포인트 설정 후 메서드 호출
      * Evaluate 창에서 조회
      * <p>

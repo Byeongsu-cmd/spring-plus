@@ -27,11 +27,11 @@ public class TodoService {
     private final TodoRepository todoRepository;
     private final WeatherClient weatherClient;
 
+    // 일정 생성 -> 등록과 동시에 일정 관리자로 자동 등록
     @Transactional
     public TodoSaveResponse saveTodo(AuthUser authUser, TodoSaveRequest todoSaveRequest) {
         User user = User.fromAuthUser(authUser);
         String weather = weatherClient.getTodayWeather();
-
         Todo newTodo = new Todo(
                 todoSaveRequest.getTitle(),
                 todoSaveRequest.getContents(),
@@ -49,15 +49,6 @@ public class TodoService {
         );
     }
 
-    /**
-     * - 할 일 검색 시 `weather` 조건으로도 검색할 수 있어야해요.
-     * - `weather` 조건은 있을 수도 있고, 없을 수도 있어요!
-     * - 할 일 검색 시 수정일 기준으로 기간 검색이 가능해야해요.
-     * - 기간의 시작과 끝 조건은 있을 수도 있고, 없을 수도 있어요!
-     * - JPQL을 사용하고, 쿼리 메소드명은 자유롭게 지정하되 너무 길지 않게 해주세요.
-     * <p>
-     * 💡 필요할 시, 서비스 단에서 if문을 사용해 여러 개의 쿼리(JPQL)를 사용하셔도 좋습니다.
-     */
     // 일정 조회
     public Page<TodoResponse> getTodos(int page, int size, String weather, LocalDateTime startAt, LocalDateTime endAt) {
         Pageable pageable = PageRequest.of(page - 1, size);

@@ -36,11 +36,4 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
             "LEFT JOIN t.user " +
             "WHERE t.id = :todoId")
     Optional<Todo> findByIdWithUser(@Param("todoId") Long todoId);
-
-    /**
-     * - 할 일 검색 시 수정일 기준으로 기간 검색이 가능해야해요.
-     * - 기간의 시작과 끝 조건은 있을 수도 있고, 없을 수도 있어요!
-     * - JPQL을 사용하고, 쿼리 메소드명은 자유롭게 지정하되 너무 길지 않게 해주세요.
-     **/
-
 }
