@@ -8,9 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
-public interface TodoRepository extends JpaRepository<Todo, Long> {
+// 인터페이스는 여러 개를 구현(implements)이 아닌 상속(extends) 할 수 있다. 하지만 클래스는 불가능! 오직 여러 개의 인터페이스를 구현(implements) 할 수 있다.
+public interface TodoRepository extends JpaRepository<Todo, Long>, TodoCustomRepository {
 
     /**
      * 파라미터에 날씨의 값(weather)이 있을 수도 있고 없을(null) 수도 있다라고 조건을 건 후
@@ -31,9 +31,4 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
                          @Param("startAt") LocalDateTime startAt,
                          @Param("endAt") LocalDateTime endAt,
                          Pageable pageable);
-
-    @Query("SELECT t FROM Todo t " +
-            "LEFT JOIN t.user " +
-            "WHERE t.id = :todoId")
-    Optional<Todo> findByIdWithUser(@Param("todoId") Long todoId);
 }
