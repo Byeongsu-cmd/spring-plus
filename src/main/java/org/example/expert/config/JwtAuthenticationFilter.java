@@ -27,12 +27,20 @@ import java.util.Map;
 @Slf4j
 @Component
 @RequiredArgsConstructor
+/**
+ * OncePerRequestFilter를 상속 받는다면 모든 요청마다 한 번만 실행!
+ * JWT Token을 검사하고, 인증 정보를 SecurityContextHolder에 등록
+ * 인증 실패 시, 에러 응답을 JSON으로 반환
+ */
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtUtil jwtUtil;
-    private final ObjectMapper objectMapper;
+    private final JwtUtil jwtUtil; // JWT Token을 파싱하고 검증하는 유틸 클래스
+    private final ObjectMapper objectMapper; // 에러 응답을 JSON으로 직렬화 하는데 사용
 
-
+    /**
+     * 인증 흐름
+     * doFilterInternal -> Authorization 헤더 확인 -> JWT 추출 -> JWT 검증 및 인증 처리
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
@@ -46,7 +54,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         String jwt = jwtUtil.substringToken(authorizationHeader);
 
-        if (!processAuthentication(jwt, request, response)) {
+        if (!processAuthentication(jwt, request, response)) { // 검증 실패 시 에러 응답 반환하고 요청 중단
             return;
         }
 
@@ -55,7 +63,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private boolean processAuthentication(String jwt, HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            Claims claims = jwtUtil.extractClaims(jwt);
+            Claims claims = jwtUtil.extractClaims(jwt); // JWT를 파싱해서 Claims 객체 추출
 
             if (SecurityContextHolder.getContext().getAuthentication() == null) {
                 setAuthentication(claims);
@@ -74,6 +82,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return false; // 검증 실패
     }
 
+    // 인증 객체 등록
     private void setAuthentication(Claims claims) {
 
         Long userId = Long.valueOf(claims.getSubject());
@@ -82,13 +91,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         UserRole userRole = UserRole.of(claims.get("userRole", String.class));
 
-        AuthUser authUser = new AuthUser(userId, email, userRole);
+        AuthUser authUser = new AuthUser(userId, email, userRole); // JWT에서 사용자 정보를 추출 후 AuthUser 객체 생성
 
+        // JwtAuthenticationToken 으로 감싸서 SpringSecurity 인증 컨텍스트에 등록
         Authentication authenticationToken = new JwtAuthenticationToken(authUser);
 
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
 
+    // 에러 응답
     private void sendErrorResponse(HttpServletResponse response, HttpStatus status, String message) throws IOException {
         response.setStatus(status.value());
         response.setContentType("application/json;charset=UTF-8");
