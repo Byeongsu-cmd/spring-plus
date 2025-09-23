@@ -15,9 +15,6 @@ import org.springframework.util.StringUtils;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
-
-@Slf4j(topic = "JwtUtil")
-@Component
 /**
  * JWT를 생성(create), 파싱(parse), 검증(validate)하는 기능을 담당
  * 참고 파싱이란? 데이터를 분석하고 해석해서 원하는 구조로 변환하는 작업을 말한다.
@@ -27,6 +24,8 @@ import java.util.Date;
  * - 결과적으로 -> Map<String, String> 형태로 변환 가능
  * Spring Security의 인증 필터 JwtAuthenticationFilter 에서 이 클래스를 사용해 Token을 처리
  */
+@Slf4j(topic = "JwtUtil")
+@Component
 public class JwtUtil {
 
     private static final String BEARER_PREFIX = "Bearer ";

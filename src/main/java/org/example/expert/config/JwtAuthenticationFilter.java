@@ -24,14 +24,14 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@Slf4j
-@Component
-@RequiredArgsConstructor
 /**
  * OncePerRequestFilter를 상속 받는다면 모든 요청마다 한 번만 실행!
  * JWT Token을 검사하고, 인증 정보를 SecurityContextHolder에 등록
  * 인증 실패 시, 에러 응답을 JSON으로 반환
  */
+@Slf4j
+@Component
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil; // JWT Token을 파싱하고 검증하는 유틸 클래스
